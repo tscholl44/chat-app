@@ -1,24 +1,39 @@
-import { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity, } from 'react-native';
+import { useEffect, useState } from "react";
+import {
+  Alert,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { getAuth, signInAnonymously } from "firebase/auth";
 
-const colors = ['#090C08', '#474056', '#8A95A5', '#B9C6AE'];
-
 const Start = ({ navigation }) => {
-  const auth = getAuth();
-  const [name, setName] = useState('');
-  const [bgColor, setBgColor] = useState(colors[0]);
+  const [name, setName] = useState("");
+  const [selectedColor, setSelectedColor] = useState();
+  const colorOptions = ["#090C08", "#474056", "#8A95A5", "#B9C6AE"];
+  const colorLabels = ["Black", "Purple", "Blue", "Green"];
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, []);
 
   const signInUser = () => {
+    const auth = getAuth();
     signInAnonymously(auth)
-      .then(result => {
-        navigation.navigate("Chat", {userID: result.user.uid, name: name, color: bgColor });
-        Alert.alert("Signed in Successfully!");
+      .then((result) => {
+        navigation.navigate("Chat", {
+          userID: result.user.uid,
+          name: name,
+          backgroundColor: selectedColor,
+        });
       })
       .catch((error) => {
-        Alert.alert("Unable to sign in, try later again.");
-      })
-  }
+        Alert.alert("Failed to sign in. Error: ", error);
+      });
+  };
 
   return (
     <ImageBackground
@@ -36,15 +51,15 @@ const Start = ({ navigation }) => {
         />
         <Text style={styles.chooseColorText}>Choose Background Color:</Text>
         <View style={styles.colorContainer}>
-          {colors.map((color) => (
+          {colorOptions.map((color) => (
             <TouchableOpacity
               key={color}
               style={[
                 styles.colorButton,
                 { backgroundColor: color },
-                bgColor === color && styles.colorButtonSelected
+                selectedColor === color && styles.colorButtonSelected
               ]}
-              onPress={() => setBgColor(color)}
+              onPress={() => setSelectedColor(color)}
               accessible={true}
               accessibilityLabel={`Select background color ${color}`}
             />
