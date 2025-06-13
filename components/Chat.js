@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Platform, KeyboardAvoidingView, FlatList } from 'react-native';
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
-import { collection, addDoc, onSnapshot, query, where } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
 
 const Chat = ({ route, navigation, db }) => {
-  const { name, bgColor, userID } = route.params;
+  const { name, backgroundColor, userID } = route.params;
   const [messages, setMessages] = useState([]);
   const [lists, setLists] = useState([]);
   const onSend = (newMessages) => {
@@ -55,7 +55,7 @@ const Chat = ({ route, navigation, db }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0} // adjust if needed
     >
-      <View style={[styles.container, { backgroundColor: bgColor }]}>
+      <View style={[styles.container, { backgroundColor: backgroundColor }]}>
         <GiftedChat
           messages={messages}
           renderBubble={renderBubble}
