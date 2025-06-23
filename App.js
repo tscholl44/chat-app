@@ -15,14 +15,14 @@ const App = () => {
   const connectionStatus = useNetInfo();
 
 // Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyCcTJAJX9tgg2vKgnZvC1jGW5jZdvBMlfM",
-    authDomain: "chat-app-99ab2.firebaseapp.com",
-    projectId: "chat-app-99ab2",
-    storageBucket: "chat-app-99ab2.firebasestorage.app",
-    messagingSenderId: "428948498459",
-    appId: "1:428948498459:web:82314807d7e73366b8b0be"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyCcTJAJX9tgg2vKgnZvC1jGW5jZdvBMlfM",
+  authDomain: "chat-app-99ab2.firebaseapp.com",
+  projectId: "chat-app-99ab2",
+  storageBucket: "chat-app-99ab2.firebasestorage.app",
+  messagingSenderId: "428948498459",
+  appId: "1:428948498459:web:82314807d7e73366b8b0be"
+};
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
@@ -46,7 +46,7 @@ const App = () => {
       <Stack.Navigator initialRouteName="Start">
         <Stack.Screen name="Start" component={Start} />
         <Stack.Screen name="Chat">
-          {props => <Chat isConnected={connectionStatus.isConnected} db={db} {...props} />}
+          {props => <Chat isConnected={connectionStatus.isConnected} db={db} storage={storage} {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
