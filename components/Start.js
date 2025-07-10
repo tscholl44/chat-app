@@ -20,6 +20,7 @@ const Start = ({ navigation }) => {
     navigation.setOptions({ headerShown: false });
   }, []);
 
+  // Function to sign in the user anonymously and navigate to the Chat screen
   const signInUser = () => {
     const auth = getAuth();
     signInAnonymously(auth)
