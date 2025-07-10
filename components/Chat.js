@@ -12,8 +12,16 @@ import CustomActions from './CustomActions';
 const Chat = ({ route, navigation, db, isConnected, storage }) => {
   const { name, backgroundColor, userID } = route.params;
   const [messages, setMessages] = useState([]);
-  const onSend = (newMessages) => {
-    addDoc(collection(db, "messages"), newMessages[0])
+  const onSend = (newMessages = []) => {
+    const message = {
+      ...newMessages[0],
+      createdAt: new Date(),
+      user: {
+        _id: userID,
+        name: name
+      }
+    };
+    addDoc(collection(db, "messages"), message);
   }
 
   let unsubMessages;
@@ -69,6 +77,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
     else return null;
   };  
 
+  // Render custom bubble styles
   const renderBubble = (props) => {
     return <Bubble
       {...props}
@@ -87,10 +96,12 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
     navigation.setOptions({ title: name });
   }, []);
 
+  // Render custom actions
   const renderCustomActions = (props) => {
-    return <CustomActions storage={storage} {...props} />;
+    return <CustomActions storage={storage} onSend={onSend} userID={userID} {...props} />;
   };
 
+  // Render custom view for location messages
   const renderCustomView = (props) => {
     const { currentMessage} = props;
     if (currentMessage.location) {
