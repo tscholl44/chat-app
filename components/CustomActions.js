@@ -14,21 +14,23 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, userID, storage })
     return `${userID}-${timeStamp}-${imageName}`;
   }
   
+  // Function to get the user's current location
   const getLocation = async () => {
     let permissions = await Location.requestForegroundPermissionsAsync();
     if (permissions?.granted) {
       const location = await Location.getCurrentPositionAsync({});
       if (location) {
-        onSend({
+        onSend([{
           location: {
             longitude: location.coords.longitude,
             latitude: location.coords.latitude,
           },
-        });
+        }]);
       } else Alert.alert("Error occurred while fetching location");
     } else Alert.alert("Permissions haven't been granted.");
   }
 
+  // Function to upload and send an image
   const uploadAndSendImage = async (imageURI) => {
     const uniqueRefString = generateReference(imageURI);
     const newUploadRef = ref(storage, uniqueRefString);
@@ -36,10 +38,11 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, userID, storage })
     const blob = await response.blob();
     uploadBytes(newUploadRef, blob).then(async (snapshot) => {
       const imageURL = await getDownloadURL(snapshot.ref)
-      onSend({ image: imageURL })
+      onSend([{ image: imageURL }])
     });
   }
 
+  // Function to pick an image from the library
   const pickImage = async () => {
     let permissions = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissions?.granted) {
@@ -49,6 +52,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, userID, storage })
     }
   }
 
+  // Function to take a photo
   const takePhoto = async () => {
     let permissions = await ImagePicker.requestCameraPermissionsAsync();
     if (permissions?.granted) {
@@ -57,8 +61,8 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, userID, storage })
       else Alert.alert("Permissions haven't been granted.");
     }
   }
-  
 
+  // Function to handle action button press
   const onActionPress = () => {
     const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
     const cancelButtonIndex = options.length - 1;
